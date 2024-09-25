@@ -68,14 +68,14 @@ button:hover{
 /* grid-column: This property specifies how many columns a grid item should occupy.
 1 = starting, / = range or span , -1 = ending column*/
 
-.firstNum{
+.secondNum{
   color: rgba(255, 255, 255, .75) ;
   font-size: 24px;
 }
 
 /* change color of first number to be a darker */
 
-.secondNum{
+.firstNum{
   color: white ;
   font-size: 48px;
 }
