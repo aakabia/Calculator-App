@@ -1,0 +1,94 @@
+*{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif ;
+  box-sizing: border-box !important;
+  font-weight: normal ;
+}
+/* applied css on all elements*/
+
+body{
+  padding: 0;
+  margin: 0;
+  background:linear-gradient(to right, blue,purple );
+}
+/* setting padding and margin to zero allow for full background on body */
+
+
+.calcGrid{
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  min-height: 100vh;
+  grid-template-columns: repeat(4, 100px); /* first arg is the amount of columns second is the width of each column. */
+  grid-template-rows: minmax(120px,auto) repeat(5,100px); /* first row height defined with minmax and repeat is for amount of rows (first arg) and and height (second arg).*/
+  overflow: hidden;
+  
+  
+}
+
+/* making our grid for our calculator */
+
+button{
+  cursor: pointer;
+  font-size: 32px !important;
+  border: 1px solid white ;
+  outline: none ;
+  background-color: rgba(255, 255, 255, .75);
+
+}
+/* The rgba() function defines colors using the Red, Green, Blue, and Alpha (transparency) channels,
+however, the alpha transparancy should be a deciaml.*/
+
+
+button:hover{
+  background-color: rgba(255, 255, 255, .90) ;
+}
+
+/* transparent hover affect on buttons*/
+
+.spanTwo{
+  grid-column: span 2 ;
+}
+
+/* span a item over two colums*/
+
+.output{
+  grid-column: 1 / -1 ;
+  background-color: rgba(0, 0, 0, .75); /* darker background color */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around; /* pushes elements further from border */
+  align-items: flex-end;
+  padding: 10px; /* adds space around items in output*/
+  word-wrap: break-word;  /* Allows long words to be broken and wrapped to the next line */
+  word-break: break-all; /* Allows words to break at any point */
+
+}
+
+/* allows for span over all columns*/
+/* grid-column: This property specifies how many columns a grid item should occupy.
+1 = starting, / = range or span , -1 = ending column*/
+
+.firstNum{
+  color: rgba(255, 255, 255, .75) ;
+  font-size: 24px;
+}
+
+/* change color of first number to be a darker */
+
+.secondNum{
+  color: white ;
+  font-size: 48px;
+}
+
+/* second number will be white and indicate typing*/
+
+
+@media (min-width: 390px) and (max-width: 450px) {
+  .calcGrid {
+    grid-template-columns: repeat(4, 90px); 
+  }
+}
+
+/* change the width of the columns for responsive design*/
+
+
