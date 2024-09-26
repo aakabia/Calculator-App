@@ -19,12 +19,18 @@ function Calculator() {
 
   // Above is a function that updates our firstNum state with the result from firstValue.
 
+  const updateSecondNum = () => {
+    setSecondNum(calcInstance.secondValue); // Update React state with current secondValue
+  };
+
+  // Above is a function that updates our secondNum state with the result from secondValue.
+
   useEffect(() => {
     calcInstance.getKeysFirst(updateFirstNum);
     // Above we call getKeysFirst and pass our updateFirstNum function to dynamically update firstnum.
 
     return () => {
-      calcInstance.cleanup();
+      calcInstance.keysCleanup();
     };
     // Above is our cleanup for when our component unmounts
   }, []);
@@ -37,6 +43,18 @@ function Calculator() {
     and update it based on user interactions with the UI
   */
 
+  useEffect(() => {
+    calcInstance.getOperatorFirst(updateSecondNum);
+
+    return () => {
+      calcInstance.operatorCleanup();
+    };
+  }, []);
+
+  // Above is where we use our second use effect for the operators
+  // We call the getOperatorFirst fucntion and pass in our updateSecondNum fucntion as a callback.
+  // Last, we return a clean up for when the component unmounts.
+
   return (
     <section className="container-fluid ">
       <div className="row ">
@@ -48,20 +66,20 @@ function Calculator() {
 
           <button className="spanTwo">AC</button>
           <button>DEL</button>
-          <button>÷</button>
+          <button className="operator">÷</button>
           <button className="key">1</button>
           <button className="key">2</button>
           <button className="key">3</button>
-          <button>*</button>
+          <button className="operator">*</button>
           <button className="key">4</button>
           <button className="key">5</button>
           <button className="key">6</button>
-          <button>+</button>
+          <button className="operator">+</button>
           <button className="key">7</button>
           <button className="key">8</button>
           <button className="key">9</button>
-          <button>-</button>
-          <button>.</button>
+          <button className="operator">-</button>
+          <button className="key">.</button>
           <button className="key">0</button>
           <button className="spanTwo">=</button>
         </section>
