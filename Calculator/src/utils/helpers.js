@@ -4,13 +4,17 @@ export default class Calc {
     this.secondValue = secondValue;
     this.keys = [];
     this.operators = [];
+    this.deleteOneBtn;
     this.handleKeyClick = this.handleKeyClick.bind(this);
     this.handleOperatorClick = this.handleOperatorClick.bind(this);
-    // Above, we bind handle key click to maintin the context of this.
-    // Also we bind handle operator click to maintain the context of this
+    this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleDeleteAllClick = this.handleDeleteAllClick.bind(this);
+    // Above, we bind handleKeyClick,handleDeleteClick,handleDeleteAllClick to maintin the context of this.
   }
 
   // Above is our constructor for our object so far
+
+  // KEYS SECTION BELOW
 
   handleKeyClick(event) {
     this.getFirstValue(event, this.updateFirstNumCallback);
@@ -65,6 +69,8 @@ export default class Calc {
   }
   // Above is used as our clean up for use effect when our COMPONENT is unmounted.
 
+  // OPERATOR SECTION BELOW:
+
   handleOperatorClick(event) {
     this.getSecondValue(
       event,
@@ -101,13 +107,31 @@ export default class Calc {
     const input = event.target.textContent;
     // Above we assign our event target to a variable
 
-    if (this.firstValue === "" && isOperator) {
+    if (this.firstValue === "" && this.secondValue === "") {
       return;
     }
 
     // Note: this is what prevents multiple operators before a number is input.
     // If our first value is empty and we click a operator we just want to return
     // we get the operator to check against our array from our event.
+
+    if (
+      operatorsToCheck.includes(
+        this.secondValue.charAt(this.secondValue.length - 1)
+      ) &&
+      isOperator &&
+      this.firstValue === ""
+    ) {
+      let newString = this.secondValue.slice(0, -1);
+      this.secondValue = newString + input;
+      updateSecondNumCallBack();
+      //console.log("updated");
+      return;
+    }
+
+    // Above, checks if our last charcter of second value is a operator and if our event is a operator.
+    // If it is we simply update second value and return.
+    // This allows us not to have consecutive operators.
 
     this.firstValue = this.secondValue + this.firstValue + input; // update first value with input and second value
     this.secondValue = this.firstValue; // Update secondValue with first value.
@@ -117,9 +141,11 @@ export default class Calc {
 
     updateSecondNumCallBack();
     updateFirstNumCallback();
+    return;
 
     // Above we call both our call backs to update our first and second value in our component.
   }
+  // Above, we get the second value.
 
   operatorCleanup() {
     this.operators.forEach((operator) => {
@@ -127,4 +153,79 @@ export default class Calc {
     });
   }
   // Above is clean up for our operator event listener.
+
+  /// DELETE BUTTONS BELOW!
+
+  handleDeleteClick(event) {
+    this.daleteOne(
+      event,
+      this.updateFirstNumCallback,
+      this.updateSecondNumCallBack
+    );
+  }
+  // Above, handleDeleteClick calls delete one and passes our updated callbacks as arguments.
+
+  getDeleteOneOperator() {
+    this.deleteOneBtn = document.querySelector(".deleteOne");
+    this.deleteOneBtn.addEventListener("click", this.handleDeleteClick);
+  }
+  // getDeleteOneOperator adds a event listener to our delete btn and calls this.handleDeleteClick as a callback.
+
+  daleteOne(event, updateFirstNumCallback, updateSecondNumCallBack) {
+    if (!this.firstValue == "") {
+      let newString = this.firstValue.slice(0, -1);
+      this.firstValue = newString;
+      updateFirstNumCallback();
+      //console.log("update first value")
+      return;
+    }
+
+    // Above checks if this.firstValue is not empty
+    // if it is not we update the value by deleting the last character, assigning it back to this.firstValue and then calling our update callback.
+
+    let newString = this.secondValue.slice(0, -1);
+    this.secondValue = newString;
+    updateSecondNumCallBack();
+    return;
+
+    // Above updates this.secondValue only if this.firstValue is empty
+  }
+
+  // Above is our function to delete one character
+
+  handleDeleteAllClick(event) {
+    this.deleteAll(
+      event,
+      this.updateFirstNumCallback,
+      this.updateSecondNumCallBack
+    );
+  }
+  // Above, handleDeleteAllClick calls delete one and passes our updated callbacks as arguments.
+
+  getDeleteAllOperator() {
+    this.deleteAllBtn = document.querySelector(".deleteAll");
+    this.deleteAllBtn.addEventListener("click", this.handleDeleteAllClick);
+  }
+
+  // getDeleteAllOperator adds a event listener to our delete All btn and calls this.handleDeleteAllClick as a callback.
+
+  deleteAll(event, updateFirstNumCallback, updateSecondNumCallBack) {
+    this.firstValue = "";
+    this.secondValue = "";
+    updateFirstNumCallback();
+    updateSecondNumCallBack();
+    //console.log("Deleted All");
+    return;
+
+    // Above sets both values to empty strings and calls our update callback functions.
+  }
+  // Above is our function to delete all inputs for first and second value.
+
+  handleDeleteCleanUp() {
+    this.deleteOneBtn.removeEventListener("click", this.handleDeleteClick);
+    this.deleteAllBtn.addEventListener("click", this.handleDeleteAllClick);
+  }
+  // handleDeleteCleanUp handles all the clean up for our delete eventlisteners by removing them once unmounted.
+
+  // EQUALS BUTTON SECTION:
 }

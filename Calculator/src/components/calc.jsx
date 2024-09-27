@@ -27,10 +27,16 @@ function Calculator() {
 
   useEffect(() => {
     calcInstance.getKeysFirst(updateFirstNum);
+    calcInstance.getOperatorFirst(updateSecondNum);
+    calcInstance.getDeleteOneOperator();
+    calcInstance.getDeleteAllOperator();
+
     // Above we call getKeysFirst and pass our updateFirstNum function to dynamically update firstnum.
 
     return () => {
       calcInstance.keysCleanup();
+      calcInstance.operatorCleanup();
+      calcInstance.handleDeleteCleanUp();
     };
     // Above is our cleanup for when our component unmounts
   }, []);
@@ -43,17 +49,8 @@ function Calculator() {
     and update it based on user interactions with the UI
   */
 
-  useEffect(() => {
-    calcInstance.getOperatorFirst(updateSecondNum);
-
-    return () => {
-      calcInstance.operatorCleanup();
-    };
-  }, []);
-
-  // Above is where we use our second use effect for the operators
-  // We call the getOperatorFirst fucntion and pass in our updateSecondNum fucntion as a callback.
-  // Last, we return a clean up for when the component unmounts.
+  // Also, We call the getOperatorFirst fucntion and pass in our updateSecondNum function as a callback.
+  // Last, we return a all clean ups for when the component unmounts.
 
   return (
     <section className="container-fluid ">
@@ -64,8 +61,8 @@ function Calculator() {
             <div className="firstNum">{firstNum}</div>
           </div>
 
-          <button className="spanTwo">AC</button>
-          <button>DEL</button>
+          <button className="spanTwo deleteAll ">AC</button>
+          <button className="deleteOne" >DEL</button>
           <button className="operator">÷</button>
           <button className="key">1</button>
           <button className="key">2</button>
