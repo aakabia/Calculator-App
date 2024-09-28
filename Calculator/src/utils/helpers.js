@@ -9,6 +9,8 @@ export default class Calc {
     this.handleOperatorClick = this.handleOperatorClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
     this.handleDeleteAllClick = this.handleDeleteAllClick.bind(this);
+    this.handleEqualClick = this.handleEqualClick.bind(this);
+
     // Above, we bind handleKeyClick,handleDeleteClick,handleDeleteAllClick to maintin the context of this.
   }
 
@@ -36,7 +38,7 @@ export default class Calc {
   getFirstValue(event, updateFirstNumCallback) {
     event.stopPropagation();
 
-    const operatorsToCheck = ["+", "-", "*", "/"];
+    const operatorsToCheck = ["+", "-", "*", "/", "÷"];
 
     if (event.target.textContent === "0" && this.firstValue === "") {
       return; // check if first number is zero and return early
@@ -97,7 +99,7 @@ export default class Calc {
   getSecondValue(event, updateFirstNumCallback, updateSecondNumCallBack) {
     event.stopPropagation();
 
-    const operatorsToCheck = ["+", "-", "*", "÷"];
+    const operatorsToCheck = ["+", "-", "*", "÷", "/"];
     // Above is our operator array
 
     const isOperator = operatorsToCheck.includes(event.target.textContent);
@@ -228,4 +230,58 @@ export default class Calc {
   // handleDeleteCleanUp handles all the clean up for our delete eventlisteners by removing them once unmounted.
 
   // EQUALS BUTTON SECTION:
+
+  handleEqualClick(event) {
+    this.getEqualValue(event, this.equalCallBack);
+  }
+  // handleEqualClick callsn getEqualValue and passes our equals callaback as a argument.
+
+  getEqualOperator(equalCallBack) {
+    this.equalCallBack = equalCallBack;
+    this.equalBtn = document.querySelector(".equalBtn");
+    this.equalBtn.addEventListener("click", this.handleEqualClick);
+  }
+
+  // Above, is our event listener for the equal btn
+  // The function assigns our equal callback to a value and passes this.handleEqualClick as a argument to our eventlistener.
+
+  getEqualValue(event, equalCallBack) {
+    event.stopPropagation();
+    let fixedResult;
+    let strResult;
+
+    if (this.firstValue === "" || this.secondValue === "") {
+      return;
+    }
+
+    // Above checks if first value and second value are present.
+
+    let evalValue = this.secondValue + this.firstValue; // set the value to evalute from second and first value
+    let result = equalCallBack(evalValue); // call the evaluate callback with evalvalue as argument.
+    strResult = result.toString(); // transform result to string
+
+    if (strResult.includes(".")) {
+      fixedResult = result.toFixed(2);
+      strResult = fixedResult.toString();
+      this.firstValue = strResult;
+      this.secondValue = "";
+      this.updateFirstNumCallback();
+      this.updateSecondNumCallBack();
+      return;
+    }
+
+    // Above checks if the result includes a "." if it does we limit the decimal place to two.
+
+    //console.log("equlas Btn:", typeof(strResult));
+    this.firstValue = strResult; // assign string to firstValue
+    this.secondValue = ""; // update second value
+    this.updateFirstNumCallback(); // call the firstnum callback to update firstvalue in UI
+    this.updateSecondNumCallBack(); // call the secoundNum callback to update secondValue in UI
+    return;
+  }
+
+  handleEqualsCleanUP() {
+    this.equalBtn.removeEventListener("click", this.handleEqualClick);
+  }
+  // Above, is our cleanup for our equals btn, we simply remove the event listener.
 }
