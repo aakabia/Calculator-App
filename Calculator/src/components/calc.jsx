@@ -1,7 +1,9 @@
 import Calc from "../utils/helpers";
 import React, { useState, useEffect } from "react";
+import { Parser } from 'expr-eval';  
 
 // Above we import our calc object, useState and useEffect;
+// Above we also use the parser package to handle string evals to math evaluations.
 
 function Calculator() {
   const [firstNum, setFirstNum] = useState("");
@@ -25,20 +27,45 @@ function Calculator() {
 
   // Above is a function that updates our secondNum state with the result from secondValue.
 
+
+  const getEqualResult = (input)=>{
+    try {
+      const parser = new Parser();
+      const evaluatedResult = parser.evaluate(input);  // Evaluate the expression
+      return evaluatedResult;
+    } catch (error) {
+      console.error("An Error occured:" , error);
+      return null;
+      
+    }
+
+  }
+
+  // getEqualResult creates a instance, assigns our result from parser.evaluate to a variable.
+  // Last it returns out evaluated result. 
+
+
+
+
+
+
   useEffect(() => {
     calcInstance.getKeysFirst(updateFirstNum);
     calcInstance.getOperatorFirst(updateSecondNum);
     calcInstance.getDeleteOneOperator();
     calcInstance.getDeleteAllOperator();
+    calcInstance.getEqualOperator(getEqualResult);
 
-    // Above we call getKeysFirst and pass our updateFirstNum function to dynamically update firstnum.
+    // Above we call our event listeners in use effect to allow user interaction with our UI.
 
     return () => {
       calcInstance.keysCleanup();
       calcInstance.operatorCleanup();
       calcInstance.handleDeleteCleanUp();
+      calcInstance.handleEqualsCleanUP();
     };
     // Above is our cleanup for when our component unmounts
+    // Every function is a different clean up for our event listiners. 
   }, []);
 
   // Above use effect is how we handle Side effect.
@@ -63,7 +90,7 @@ function Calculator() {
 
           <button className="spanTwo deleteAll ">AC</button>
           <button className="deleteOne" >DEL</button>
-          <button className="operator">÷</button>
+          <button className="operator">/</button>
           <button className="key">1</button>
           <button className="key">2</button>
           <button className="key">3</button>
@@ -78,7 +105,7 @@ function Calculator() {
           <button className="operator">-</button>
           <button className="key">.</button>
           <button className="key">0</button>
-          <button className="spanTwo">=</button>
+          <button className="spanTwo equalBtn">=</button>
         </section>
       </div>
     </section>
